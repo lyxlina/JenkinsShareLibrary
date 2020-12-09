@@ -1,0 +1,84 @@
+@Library('jenkinslib')
+def tools = new org.devops.tools()
+
+String workspace = "/var/lib/jenkins/workspace"
+//pipeline
+pipeline {
+    agent { node { label "master"
+                   customWorkspace "${workspace}"
+        
+           }
+        
+    }
+    environment{
+        CC='clang   '
+    }
+    tools{
+        maven 'M3'
+    }
+    options{
+        timestamps()
+        skipDefaultCheckout()
+        timeout(time: 1,unit: 'HOURS')
+        
+        
+    }
+    stages{
+        //下载代码下载代码
+        stage("GetCode"){
+            when{
+                environment name:'test',value:'abcd'
+            }
+            steps{
+                timeout(time:5,unit: 'MINUTES'){
+                    script{
+                        sh 'mvn --version'
+                        println("获取代码")
+
+                    }
+                    
+                }
+            }
+            
+        }
+        stage("Build"){
+            steps{
+                timeout(time:20,unit:"MINUTES"){
+                    script{
+                        println('应用打包')
+                    }
+                }
+            }
+        }
+        stage("CodeScan"){
+            steps{
+                timeout(time:30,unit:"MINUTES"){
+                    script{
+                        print("代码扫描 ")
+                        tools.printMes("this is mylib")
+                        input id: 'Test', message: 'should we continue?', ok: '是，继续吧', parameters: [choice(choices: ['a', 'b'], description: '', name: 'test1')], submitter: 'root,lina'
+                    }
+                    
+                }
+            }
+        }
+     
+       
+}
+    post{
+        always{
+            script{
+                println("always")
+            }
+        }
+        failure{
+            script{
+                println("构建失败 ")
+            }
+        }
+    }
+
+
+//构建后操作
+
+}
