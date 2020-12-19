@@ -1,7 +1,7 @@
 package org.devops
 
 //打印内容,格式化输出
-def printMes(color){
+def printColor(color){
     //println(content)
     colors = [
         'blue' : "\033[30m 黑色字 \033[0m"，
