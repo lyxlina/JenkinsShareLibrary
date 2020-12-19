@@ -4,10 +4,9 @@ package org.devops
 def printMes(value,color){
     println(content)
     colors = [
-        'blue' : "\033[46;30m ${value} \033[0m"，
-        'red' : "\033[5;34m ${value} \033[0m"，
-        'black' : "\033[30m ${value} \033[0m"，
-        'green' : "\033[32m ${value} \033[0m" ]
+        'blue' : "\033[30m 黑色字 \033[0m"，
+        'red' : "\033[31m 红色字 \033[0m"，
+        'yellow' : ""\033[33m 黄色字 \033[0m" ]
     ansiColor('xterm') {
     // some block
         println(colors[color])
