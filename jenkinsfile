@@ -1,8 +1,9 @@
-@Library('jenkinslib')
+@Library('jenkinslib') _
 def tools = new org.devops.tools()
-
+//jenkinslib
 String workspace = "/var/lib/jenkins/workspace"
 //pipeline
+String buildShell = "${env.buildShell}"
 pipeline {
     agent { node { label "master"
                    customWorkspace "${workspace}"
@@ -13,9 +14,9 @@ pipeline {
     environment{
         CC='clang   '
     }
-    tools{
-        maven 'M3'
-    }
+    //tools{
+       // maven 'M3'
+    //}
     options{
         timestamps()
         skipDefaultCheckout()
@@ -32,7 +33,12 @@ pipeline {
             steps{
                 timeout(time:5,unit: 'MINUTES'){
                     script{
-                        sh 'mvn --version'
+                        println("应用打包")
+                        mvnHome = tool "M3"
+                        println(mvnHome)
+
+                        sh "${mvnHome}/bin/mvn ${buildShell}"                        
+                        //sh 'mvn --version'
                         println("获取代码")
 
                     }
@@ -55,14 +61,38 @@ pipeline {
                 timeout(time:30,unit:"MINUTES"){
                     script{
                         print("代码扫描 ")
-                        tools.printMes("this is mylib")
+                        tools.printMes("代码扫描",'red')
                         input id: 'Test', message: 'should we continue?', ok: '是，继续吧', parameters: [choice(choices: ['a', 'b'], description: '', name: 'test1')], submitter: 'root,lina'
                     }
                     
                 }
             }
         }
-     
+        stage("GradleBuild"){
+            steps{
+                 timeout(time:30,unit:"MINUTES"){
+                     script{
+                        // println("gradle构建测试 ")
+                         gradleHome = tool "GRADLE"
+                         println(gradleHome)
+                         sh "${gradleHome}/bin/gradle ${buildShell}"
+                         // sh "${mvnHome}/bin/mvn ${buildShell}"
+                     }
+                   
+                 }
+            }
+        }
+        stage("NPMbuild"){
+            steps{
+                timeout(time:30,unit:"MINUTES"){
+                    script{
+                        npmHome = tool "NPM"
+                        println(npmHome)
+                        sh "${npmHome}/bin/node ${buildShell}"
+                    }
+                }
+            }
+        }
        
 }
     post{
