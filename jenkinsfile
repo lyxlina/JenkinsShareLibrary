@@ -4,6 +4,7 @@ def build = new org.devops.build()
 //jenkinslib
 String workspace = "/var/lib/jenkins/workspace"
 //pipeline
+String buildType ="${env.buildType}"
 String buildShell = "${env.buildShell}"
 pipeline {
     agent { node { label "master"
