@@ -54,7 +54,7 @@ pipeline {
             }
             
         }
-       /* stage("Build"){
+        stage("Build"){
             steps{
                 timeout(time:20,unit:"MINUTES"){
                     script{
@@ -80,7 +80,7 @@ pipeline {
      
        
 }
-*/
+
     post{
         always{
             script{
