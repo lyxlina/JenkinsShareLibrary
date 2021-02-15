@@ -6,6 +6,10 @@ String workspace = "/var/lib/jenkins/workspace"
 //pipeline
 String buildType ="${env.buildType}"
 String buildShell = "${env.buildShell}"
+
+
+String srcUrl = "${env.srcUrl}"
+String branchName = "${env.branchName}"
 pipeline {
     agent { node { label "master"
                    customWorkspace "${workspace}"
@@ -42,6 +46,7 @@ pipeline {
                         sh "${mvnHome}/bin/mvn ${buildShell}"                        
                         //sh 'mvn --version'
                         println("获取代码")
+                        checkout([$class: 'GitSCM', branches: [[name: "${branchName}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '54c63393-5820-4b5c-a574-f8162c530a38', url: "${srcUrl}"]]])
 
                     }
                     
